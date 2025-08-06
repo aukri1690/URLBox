@@ -8,7 +8,8 @@ const MakeFolderButton = () => {
                 <IconButton
                     aria-label="フォルダーを作成"
                     variant="ghost"
-                    colorPalette="purple"
+                    colorPalette="white"
+                    size="md"
                 >
                     <FiFolderPlus />
                 </IconButton>
@@ -24,7 +25,7 @@ const MakeFolderButton = () => {
                             </Popover.Title>
                             <Group attached w="full" maxW="sm">
                             <Input placeholder="新規フォルダ名" size="md" variant="outline"/>
-                            <Button bg="bg.subtle" variant="outline" colorPalette="purple">作成</Button>
+                            <Button bg="bg.subtle" variant="outline" colorPalette="green">作成</Button>
                             </Group>
                         </Popover.Body>
                     </Popover.Content>
