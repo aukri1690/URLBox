@@ -3,7 +3,7 @@ import { FiFolderPlus } from "react-icons/fi";
 
 const MakeFolderButton = () => {
     return (
-        <IconButton aria-label="Search database" variant="ghost" colorPalette="cyan" >
+        <IconButton aria-label="Search database" variant="ghost" colorPalette="purple" >
             <FiFolderPlus/>
         </IconButton>
     )
