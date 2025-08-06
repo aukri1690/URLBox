@@ -1,9 +1,9 @@
 "use client"
 
 import { Box } from "@chakra-ui/react"
-import Folder from "@/components/FolderComponents"
+import Folder from "@/components/FolderList"
 import { ColorModeButton } from "@/components/ui/color-mode"
-import MakeFolderButton from "@/components/MakeFolderButton"
+import CreateNewFolderButton from "@/components/CreateNewFolder"
 
 const Home = () => {
     return(
@@ -15,7 +15,7 @@ const Home = () => {
             p={4}   
             zIndex="tooltip"
         >
-            <MakeFolderButton />
+            <CreateNewFolderButton />
             <ColorModeButton />
         </Box>
         <Folder />

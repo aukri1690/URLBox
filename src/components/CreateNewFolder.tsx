@@ -1,7 +1,7 @@
 import {Button,IconButton,Input,Popover,Portal,Group,} from "@chakra-ui/react";
 import { FiFolderPlus } from "react-icons/fi";
 
-const MakeFolderButton = () => {
+const CreateNewFolderButton = () => {
     return (
         <Popover.Root>
             <Popover.Trigger asChild>
@@ -35,4 +35,4 @@ const MakeFolderButton = () => {
     );
 };
 
-export default MakeFolderButton;
+export default CreateNewFolderButton;
