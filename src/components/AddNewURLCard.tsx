@@ -1,17 +1,17 @@
 import {Button,IconButton,Input,Popover,Portal,Group,} from "@chakra-ui/react";
-import { FiFolderPlus } from "react-icons/fi";
+import { TbLinkPlus } from "react-icons/tb";
 
-const CreateNewFolderButton = () => {
+const AddNewURLCardButton = () => {
     return (
         <Popover.Root>
             <Popover.Trigger asChild>
                 <IconButton
-                    aria-label="フォルダを作成"
+                    aria-label="URLを追加"
                     variant="ghost"
                     colorPalette="white"
-                    size="md"
+                    size="lg"
                 >
-                    <FiFolderPlus />
+                    <TbLinkPlus />
                 </IconButton>
             </Popover.Trigger>
             <Portal>
@@ -20,11 +20,11 @@ const CreateNewFolderButton = () => {
                         <Popover.Arrow />
                         <Popover.Body>
                             <Popover.Title fontWeight="bold" mb={6}>
-                                新規フォルダを作成する
+                                URLを追加する
                             </Popover.Title>
                             <Group attached w="full" maxW="sm">
-                            <Input placeholder="新規フォルダ名" size="md" variant="flushed" css={{ "--focus-color": "white" }}/>
-                            <Button bg="bg.subtle" variant="ghost" colorPalette="white">作成</Button>
+                            <Input placeholder="URL" size="md" variant="flushed" css={{ "--focus-color": "white" }}/>
+                            <Button bg="bg.subtle" variant="ghost" colorPalette="white">追加</Button>
                             </Group>
                         </Popover.Body>
                     </Popover.Content>
@@ -34,4 +34,4 @@ const CreateNewFolderButton = () => {
     );
 };
 
-export default CreateNewFolderButton;
+export default AddNewURLCardButton;
