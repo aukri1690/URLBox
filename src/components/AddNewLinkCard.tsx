@@ -1,7 +1,7 @@
 import {Button,IconButton,Input,Popover,Portal,Group,} from "@chakra-ui/react";
 import { TbLinkPlus } from "react-icons/tb";
 
-const AddNewURLCardButton = () => {
+const AddNewLinkCardButton = () => {
     return (
         <Popover.Root>
             <Popover.Trigger asChild>
@@ -34,4 +34,4 @@ const AddNewURLCardButton = () => {
     );
 };
 
-export default AddNewURLCardButton;
+export default AddNewLinkCardButton;
