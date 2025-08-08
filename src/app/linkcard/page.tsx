@@ -2,7 +2,7 @@
 
 import { Box } from "@chakra-ui/react"
 import { ColorModeButton } from "@/components/ui/color-mode"
-import AddNewURLCardButton from "@/components/AddNewURLCard"
+import AddNewLinkCardButton from "@/components/AddNewLinkCard"
 
 const Home = () => {
     return(
@@ -14,7 +14,7 @@ const Home = () => {
             p={4}   
             zIndex="tooltip"
         >
-            <AddNewURLCardButton />
+            <AddNewLinkCardButton />
             <ColorModeButton />
         </Box>
         </>
