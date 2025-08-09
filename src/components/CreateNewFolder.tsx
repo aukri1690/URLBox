@@ -1,7 +1,22 @@
-import {Button,IconButton,Input,Popover,Portal,Group,} from "@chakra-ui/react";
+import { Button, IconButton, Input, Popover, Portal, Group } from "@chakra-ui/react";
 import { FiFolderPlus } from "react-icons/fi";
+import { useState } from "react";
 
-const CreateNewFolderButton = () => {
+type Props = { onCreateFolder?: (name: string) => void };
+
+const CreateNewFolderButton = ({ onCreateFolder }: Props) => {
+    const [folder, setFolder] = useState("");
+
+    const createNewFolder = () => {
+        const name = folder.trim();
+        if (!name) return;
+        onCreateFolder?.(name);
+        window.dispatchEvent(
+            new CustomEvent("folder:create", { detail: { name } })
+        );
+        setFolder("");
+    };
+
     return (
         <Popover.Root>
             <Popover.Trigger asChild>
@@ -23,8 +38,23 @@ const CreateNewFolderButton = () => {
                                 新規フォルダを作成する
                             </Popover.Title>
                             <Group attached w="full" maxW="sm">
-                            <Input placeholder="新規フォルダ名" size="md" variant="flushed" css={{ "--focus-color": "white" }}/>
-                            <Button bg="bg.subtle" variant="ghost" colorPalette="white">作成</Button>
+                                <Input
+                                    value={folder}
+                                    onChange={(e) => setFolder(e.target.value)}
+                                    placeholder="新規フォルダ名"
+                                    size="md"
+                                    variant="flushed"
+                                    css={{ "--focus-color": "white" }}
+                                />
+                                <Button
+                                    onClick={createNewFolder}
+                                    bg="bg.subtle"
+                                    variant="ghost"
+                                    colorPalette="white"
+                                    disabled={!folder.trim()}
+                                >
+                                    作成
+                                </Button>
                             </Group>
                         </Popover.Body>
                     </Popover.Content>
