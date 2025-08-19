@@ -3,7 +3,7 @@ import { Button, IconButton, Input, Popover, Portal, Group } from "@chakra-ui/re
 import { TbLinkPlus } from "react-icons/tb";
 import { useState } from "react";
 
-type AddNewLinkCardButtonProps = { onAdd: (url: string) => void };
+type AddNewLinkCardButtonProps = { onAdd?: (url: string) => void };
 
 const AddNewLinkCardButton = ({ onAdd }: AddNewLinkCardButtonProps) => {
     const [url, setUrl] = useState("");
@@ -14,7 +14,8 @@ const AddNewLinkCardButton = ({ onAdd }: AddNewLinkCardButtonProps) => {
         if (!/^https?:\/\//i.test(v)) v = `https://${v}`;
         try {
             new URL(v);
-            onAdd(v);
+            onAdd?.(v);
+            window.dispatchEvent(new CustomEvent("link:add", { detail: { url: v } }));
             setUrl("");
         } catch { }
     };

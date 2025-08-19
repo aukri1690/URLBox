@@ -1,3 +1,4 @@
+"use client";
 import { Button, IconButton, Input, Popover, Portal, Group } from "@chakra-ui/react";
 import { FiFolderPlus } from "react-icons/fi";
 import { useState } from "react";
@@ -11,21 +12,14 @@ const CreateNewFolderButton = ({ onCreateFolder }: Props) => {
         const name = folder.trim();
         if (!name) return;
         onCreateFolder?.(name);
-        window.dispatchEvent(
-            new CustomEvent("folder:create", { detail: { name } })
-        );
+        window.dispatchEvent(new CustomEvent("folder:create", { detail: { name } }));
         setFolder("");
     };
 
     return (
         <Popover.Root>
             <Popover.Trigger asChild>
-                <IconButton
-                    aria-label="フォルダを作成"
-                    variant="ghost"
-                    colorPalette="white"
-                    size="md"
-                >
+                <IconButton aria-label="フォルダを作成" variant="ghost" colorPalette="white" size="md">
                     <FiFolderPlus />
                 </IconButton>
             </Popover.Trigger>
