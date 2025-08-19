@@ -58,12 +58,13 @@ const LinkCard = ({ href }: { href: string }) => {
 type Props = {
     urls?: string[];
     folderId?: string;
-    };
+};
 
-const LinkCardList = ({ urls }: Props) => {
+const LinkCardList = ({ urls, folderId }: Props) => {
     const [items, setItems] = useState<string[]>([]);
     const [mounted, setMounted] = useState(false);
     const firstPersistSkip = useRef(true);
+    const storageKey = folderId ? `${LS_KEYS.LINKS}:${folderId}` : LS_KEYS.LINKS;
 
     useEffect(() => {
         setMounted(true);
@@ -71,25 +72,27 @@ const LinkCardList = ({ urls }: Props) => {
             if (urls && urls.length > 0) {
                 setItems(urls);
             } else {
-                const raw = localStorage.getItem(LS_KEYS.LINKS);
+                const raw = localStorage.getItem(storageKey);
                 setItems(raw ? JSON.parse(raw) : []);
             }
         } catch {
             setItems([]);
         }
-    }, []);
+        firstPersistSkip.current = true;
+    }, [storageKey, urls]);
 
     useEffect(() => {
         const handler = (e: Event) => {
-            const evt = e as CustomEvent<{ url: string }>;
+            const evt = e as CustomEvent<{ url: string; folderId?: string }>;
             const url = evt.detail?.url;
-            if (typeof url === "string" && url.trim()) {
-                setItems((prev) => [...prev, url]);
-            }
+            const evFolderId = evt.detail?.folderId;
+            if (!url || !url.trim()) return;
+            if (folderId && evFolderId !== folderId) return;
+            setItems((prev) => [...prev, url]);
         };
         window.addEventListener("link:add", handler as EventListener);
         return () => window.removeEventListener("link:add", handler as EventListener);
-    }, []);
+    }, [folderId]);
 
     useEffect(() => {
         if (!mounted) return;
@@ -98,9 +101,9 @@ const LinkCardList = ({ urls }: Props) => {
             return;
         }
         try {
-            localStorage.setItem(LS_KEYS.LINKS, JSON.stringify(items));
+            localStorage.setItem(storageKey, JSON.stringify(items));
         } catch { }
-    }, [items, mounted]);
+    }, [items, mounted, storageKey]);
 
     if (!mounted) return null;
     if (!items.length) return null;
