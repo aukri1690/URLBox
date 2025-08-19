@@ -1,6 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Image, Text, LinkBox, LinkOverlay, VStack, HStack } from "@chakra-ui/react";
+
+const LS_KEYS = { LINKS: "app.links" } as const;
 
 export type LinkMeta = {
     url: string;
@@ -16,6 +18,7 @@ const LinkCard = ({ href }: { href: string }) => {
         fetch(`/api/unfurl?url=${encodeURIComponent(href)}`)
             .then((r) => r.json())
             .then((d) => active && setMeta(d))
+            .catch(() => { });
         return () => {
             active = false;
         };
@@ -24,10 +27,6 @@ const LinkCard = ({ href }: { href: string }) => {
     if (!meta) return null;
 
     const title = meta.title || meta.url;
-    let host = meta.url;
-    try {
-        host = new URL(meta.url).host;
-    } catch { }
 
     return (
         <LinkBox
@@ -40,24 +39,15 @@ const LinkCard = ({ href }: { href: string }) => {
         >
             <HStack align="stretch" h="100%">
                 <VStack align="start" h="100%" p={3} w="65%">
-                    <Text as="h3" mt={6} fontWeight="bold" lineClamp={1} >
-                        <LinkOverlay
-                            href={meta.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >{title}
+                    <Text as="h3" mt={6} fontWeight="bold" lineClamp={1}>
+                        <LinkOverlay href={meta.url} target="_blank" rel="noopener noreferrer">
+                            {title}
                         </LinkOverlay>
                     </Text>
                 </VStack>
                 <Box w="40%" h="100%" bg="gray.50">
                     {meta.image ? (
-                        <Image
-                            src={meta.image}
-                            w="100%"
-                            h="100%"
-                            objectFit="cover"
-                            display="block"
-                        />
+                        <Image src={meta.image} w="100%" h="100%" objectFit="cover" display="block" />
                     ) : null}
                 </Box>
             </HStack>
@@ -65,14 +55,63 @@ const LinkCard = ({ href }: { href: string }) => {
     );
 };
 
-const LinkCardList = ({ urls }: { urls: string[] }) => {
+type Props = {
+    urls?: string[];
+    folderId?: string;
+    };
+
+const LinkCardList = ({ urls }: Props) => {
+    const [items, setItems] = useState<string[]>([]);
+    const [mounted, setMounted] = useState(false);
+    const firstPersistSkip = useRef(true);
+
+    useEffect(() => {
+        setMounted(true);
+        try {
+            if (urls && urls.length > 0) {
+                setItems(urls);
+            } else {
+                const raw = localStorage.getItem(LS_KEYS.LINKS);
+                setItems(raw ? JSON.parse(raw) : []);
+            }
+        } catch {
+            setItems([]);
+        }
+    }, []);
+
+    useEffect(() => {
+        const handler = (e: Event) => {
+            const evt = e as CustomEvent<{ url: string }>;
+            const url = evt.detail?.url;
+            if (typeof url === "string" && url.trim()) {
+                setItems((prev) => [...prev, url]);
+            }
+        };
+        window.addEventListener("link:add", handler as EventListener);
+        return () => window.removeEventListener("link:add", handler as EventListener);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+        if (firstPersistSkip.current) {
+            firstPersistSkip.current = false;
+            return;
+        }
+        try {
+            localStorage.setItem(LS_KEYS.LINKS, JSON.stringify(items));
+        } catch { }
+    }, [items, mounted]);
+
+    if (!mounted) return null;
+    if (!items.length) return null;
+
     return (
         <VStack mt={10} gap={7} align="center" w="full">
-            {urls.map((u) => (
+            {items.map((u) => (
                 <LinkCard key={u} href={u} />
             ))}
         </VStack>
     );
-}
+};
 
 export default LinkCardList;
