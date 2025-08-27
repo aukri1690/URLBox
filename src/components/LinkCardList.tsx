@@ -105,8 +105,7 @@ const LinkCardList = ({ urls, folderId }: Props) => {
         } catch { }
     }, [items, mounted, storageKey]);
 
-    if (!mounted) return null;
-    if (!items.length) return null;
+    if (!mounted || items.length === 0) return null;
 
     return (
         <VStack mt={10} gap={7} align="center" w="full">
