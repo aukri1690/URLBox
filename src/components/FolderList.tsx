@@ -1,18 +1,9 @@
 "use client";
 
-import {
-    Flex,
-    Group,
-    Card,
-    Popover,
-    Portal,
-    Box,
-    SimpleGrid,
-    Text,
-} from "@chakra-ui/react";
-import { BsFolderFill } from "react-icons/bs";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Flex, Group, Card, Popover, Portal, Box, SimpleGrid, Text,} from "@chakra-ui/react";
+import { BsFolderFill } from "react-icons/bs";
 
 const LS_KEYS = { FOLDERS: "app.folders" } as const;
 
