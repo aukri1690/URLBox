@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Flex, Group, Card, Popover, Portal, Box, SimpleGrid, Text,} from "@chakra-ui/react";
+import { Flex, Group, Card, Popover, Portal, Box, SimpleGrid, Text, } from "@chakra-ui/react";
 import { BsFolderFill } from "react-icons/bs";
+import { FaRegPenToSquare } from "react-icons/fa6";
 
 const LS_KEYS = { FOLDERS: "app.folders" } as const;
 
@@ -63,6 +64,16 @@ const FolderList = () => {
             return next;
         });
     }, []);
+
+    const changeName = useCallback((index: number) => {
+        const newName = prompt("新しいフォルダ名を入力してください");
+        if (!newName || !newName.trim()) return;
+        persist((prev) => {
+            const next = [...prev];
+            next[index] = { ...next[index], name: newName.trim() };
+            return next;
+        });
+    }, [persist]);
 
     const onCreate = useCallback((e: Event) => {
         const evt = e as CustomEvent<{ name: string }>;
@@ -150,6 +161,13 @@ const FolderList = () => {
                             <Text fontSize="2xl" fontWeight="bold" >
                                 {folder.name}
                             </Text>
+                            <Box ml='auto'>
+                                <FaRegPenToSquare 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    changeName(idx);
+                                }}/>
+                            </Box>
                         </Flex>
                     </Card.Root>
                 </Group>
