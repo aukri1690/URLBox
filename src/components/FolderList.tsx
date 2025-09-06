@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Flex, Group, Card, Popover, Portal, Box, SimpleGrid, Text, } from "@chakra-ui/react";
 import { BsFolderFill } from "react-icons/bs";
 import { FaRegPenToSquare } from "react-icons/fa6";
+import { LuTrash2 } from "react-icons/lu";
 
 const LS_KEYS = { FOLDERS: "app.folders" } as const;
 
@@ -74,6 +75,15 @@ const FolderList = () => {
             return next;
         });
     }, [persist]);
+
+    const deleteFolder = useCallback((index: number) => {
+    if (!window.confirm("このフォルダを削除しますか？")) return;
+    persist((prev) => {
+        const next = [...prev];
+        next.splice(index, 1);
+        return next;
+    });
+}, [persist]);
 
     const onCreate = useCallback((e: Event) => {
         const evt = e as CustomEvent<{ name: string }>;
@@ -167,6 +177,14 @@ const FolderList = () => {
                                     e.stopPropagation();
                                     changeName(idx);
                                 }}/>
+                            </Box>
+                            <Box>
+                                <LuTrash2
+                                color='red'
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteFolder(idx);
+                                }} />
                             </Box>
                         </Flex>
                     </Card.Root>
