@@ -3,7 +3,7 @@
 import { Box } from "@chakra-ui/react"
 import Folder from "@/components/FolderList"
 import { ColorModeButton } from "@/components/ui/color-mode"
-import CreateNewFolderButton from "@/components/CreateNewFolder"
+import NewFolder from "@/components/NewFolder"
 
 const Home = () => {
     return(
@@ -15,7 +15,7 @@ const Home = () => {
             p={4}   
             zIndex="tooltip"
         >
-            <CreateNewFolderButton />
+            <NewFolder />
             <ColorModeButton />
         </Box>
         <Folder />

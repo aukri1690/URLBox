@@ -5,15 +5,19 @@ import { useState } from "react";
 
 type Props = { onCreateFolder?: (name: string) => void };
 
-const CreateNewFolderButton = ({ onCreateFolder }: Props) => {
+const NewFolder = ({ onCreateFolder }: Props) => {
     const [folder, setFolder] = useState("");
 
     const createNewFolder = () => {
         const name = folder.trim();
         if (!name) return;
-        onCreateFolder?.(name);
-        window.dispatchEvent(new CustomEvent("folder:create", { detail: { name } }));
-        setFolder("");
+        try {
+            onCreateFolder?.(name);
+            window.dispatchEvent(new CustomEvent("folder:create", { detail: { name } }));
+            setFolder("");
+        } catch {
+            console.error('フォルダの作成に失敗しました')
+        }
     };
 
     return (
@@ -58,4 +62,4 @@ const CreateNewFolderButton = ({ onCreateFolder }: Props) => {
     );
 };
 
-export default CreateNewFolderButton;
+export default NewFolder;
