@@ -5,10 +5,10 @@ import { useState } from "react";
 
 type AddNewLinkCardButtonProps = { onAdd?: (url: string) => void };
 
-const AddNewLinkCardButton = ({ onAdd }: AddNewLinkCardButtonProps) => {
+const NewLinkCard= ({ onAdd }: AddNewLinkCardButtonProps) => {
     const [url, setUrl] = useState("");
 
-    const add = () => {
+    const addNewLinkCard= () => {
         let normalizedUrl = url.trim();
         if (!normalizedUrl) return;
         if (!/^https?:\/\//i.test(normalizedUrl)) normalizedUrl = `https://${normalizedUrl}`;
@@ -51,7 +51,7 @@ const AddNewLinkCardButton = ({ onAdd }: AddNewLinkCardButtonProps) => {
                                         bg="bg.subtle"
                                         variant="ghost"
                                         colorPalette="white"
-                                        onClick={add}
+                                        onClick={addNewLinkCard}
                                         disabled={!url.trim()}
                                     >
                                         追加
@@ -66,4 +66,4 @@ const AddNewLinkCardButton = ({ onAdd }: AddNewLinkCardButtonProps) => {
     );
 };
 
-export default AddNewLinkCardButton;
+export default NewLinkCard;
