@@ -8,16 +8,18 @@ type AddNewLinkCardButtonProps = { onAdd?: (url: string) => void };
 const AddNewLinkCardButton = ({ onAdd }: AddNewLinkCardButtonProps) => {
     const [url, setUrl] = useState("");
 
-    const handleAdd = () => {
-        let v = url.trim();
-        if (!v) return;
-        if (!/^https?:\/\//i.test(v)) v = `https://${v}`;
+    const add = () => {
+        let normalizedUrl = url.trim();
+        if (!normalizedUrl) return;
+        if (!/^https?:\/\//i.test(normalizedUrl)) normalizedUrl = `https://${normalizedUrl}`;
         try {
-            new URL(v);
-            onAdd?.(v);
-            window.dispatchEvent(new CustomEvent("link:add", { detail: { url: v } }));
+            new URL(normalizedUrl);
+            onAdd?.(normalizedUrl);
+            window.dispatchEvent(new CustomEvent("link:add", { detail: { url: normalizedUrl } }));
             setUrl("");
-        } catch { }
+        } catch {
+            console.error('入力されたURLは不適切です：', url);
+        }
     };
 
     return (
@@ -49,7 +51,7 @@ const AddNewLinkCardButton = ({ onAdd }: AddNewLinkCardButtonProps) => {
                                         bg="bg.subtle"
                                         variant="ghost"
                                         colorPalette="white"
-                                        onClick={handleAdd}
+                                        onClick={add}
                                         disabled={!url.trim()}
                                     >
                                         追加
