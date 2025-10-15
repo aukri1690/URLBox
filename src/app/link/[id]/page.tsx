@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { ColorModeButton } from "@/components/ui/color-mode";
-import AddNewLinkCardButton from "@/components/AddNewLinkCard";
+import NewLinkCard from "@/components/NewLinkCard";
 import LinkCardList from "@/components/LinkCardList";
 import BackToFolderButton from "@/components/BackToFolder";
 
@@ -25,7 +25,7 @@ const Home = () => {
       <Box position="fixed" top={0} right={0} p={4} zIndex="tooltip" >
         <HStack>
         <BackToFolderButton />
-        <AddNewLinkCardButton onAdd={handleAddUrl} />
+        <NewLinkCard onAdd={handleAddUrl} />
         <ColorModeButton />
         </HStack>
       </Box>
