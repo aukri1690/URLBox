@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Box, Image, Text, LinkBox, LinkOverlay, VStack, HStack } from "@chakra-ui/react";
 
-const LS_KEYS = { LINKS: "app.links" } as const;
+const LOCAL_STORAGE_KEYS = { LINKS: "app.links" } as const;
 
 export type LinkMeta = {
     url: string;
@@ -18,7 +18,9 @@ const LinkCard = ({ href }: { href: string }) => {
         fetch(`/api/unfurl?url=${encodeURIComponent(href)}`)
             .then((r) => r.json())
             .then((d) => active && setMeta(d))
-            .catch(() => { });
+            .catch(() => {
+                console.error('リンクのメタ情報の取得に失敗しました。')
+            });
         return () => {
             active = false;
         };
@@ -64,7 +66,7 @@ const LinkCardList = ({ urls, folderId }: Props) => {
     const [items, setItems] = useState<string[]>([]);
     const [mounted, setMounted] = useState(false);
     const firstPersistSkip = useRef(true);
-    const storageKey = folderId ? `${LS_KEYS.LINKS}:${folderId}` : LS_KEYS.LINKS;
+    const storageKey = folderId ? `${LOCAL_STORAGE_KEYS.LINKS}:${folderId}` : LOCAL_STORAGE_KEYS.LINKS;
 
     useEffect(() => {
         setMounted(true);
@@ -83,11 +85,11 @@ const LinkCardList = ({ urls, folderId }: Props) => {
 
     useEffect(() => {
         const handler = (e: Event) => {
-            const evt = e as CustomEvent<{ url: string; folderId?: string }>;
-            const url = evt.detail?.url;
-            const evFolderId = evt.detail?.folderId;
+            const event = e as CustomEvent<{ url: string; folderId?: string }>;
+            const url = event.detail?.url;
+            const eventFolderId = event.detail?.folderId;
             if (!url || !url.trim()) return;
-            if (folderId && evFolderId !== folderId) return;
+            if (folderId && eventFolderId !== folderId) return;
             setItems((prev) => [...prev, url]);
         };
         window.addEventListener("link:add", handler as EventListener);
