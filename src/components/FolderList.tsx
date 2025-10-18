@@ -29,7 +29,7 @@ const PALETTE: string[] = [
 ];
 
 const generateId = () => String(Math.floor(Math.random() * 10000)).padStart(4, '0');
-    
+
 const loadFolders = (): Folder[] => {
     try {
         const raw = localStorage.getItem(LOCAL_STORAGE_KEYS.FOLDERS);
@@ -37,14 +37,19 @@ const loadFolders = (): Folder[] => {
         const parsed: Folder[] = JSON.parse(raw);
         return parsed.map((f) => ({ ...f, color: f.color ?? DEFAULT_COLOR }));
     } catch {
+        console.error('フォルダの読み込みに失敗しました。')
         return [];
+        // ユーザーに通知する処理を実装予定。
     }
 };
 
 const saveFolders = (next: Folder[]) => {
     try {
         localStorage.setItem(LOCAL_STORAGE_KEYS.FOLDERS, JSON.stringify(next));
-    } catch { }
+    } catch {
+        console.error('フォルダの保存に失敗しました。')
+        // ユーザーに通知する処理を実装予定。
+    }
 };
 
 const FolderList = () => {
@@ -52,9 +57,11 @@ const FolderList = () => {
     const router = useRouter();
 
     useEffect(() => {
-        const init = loadFolders();
-        setFolders(init);
-        if (init.length) saveFolders(init);
+        const existingFolders = loadFolders();
+        setFolders(existingFolders);
+        if (existingFolders.length !== 0) {
+            saveFolders(existingFolders);
+        }
     }, []);
 
     const persist = useCallback((updater: (prev: Folder[]) => Folder[]) => {
@@ -85,8 +92,8 @@ const FolderList = () => {
     }, [persist]);
 
     const onCreate = useCallback((e: Event) => {
-        const evt = e as CustomEvent<{ name: string }>;
-        const name = evt.detail?.name?.trim();
+        const event = e as CustomEvent<{ name: string }>;
+        const name = event.detail?.name?.trim();
         if (!name) return;
         persist((prev) => [...prev, { id: generateId(), name, color: DEFAULT_COLOR }]);
     }, [persist]);
@@ -108,7 +115,7 @@ const FolderList = () => {
         [persist]
     );
 
-    if (!folders.length) return null;
+    if (folders.length === 0) return null;
 
     return (
         <Flex align="center" justify="center" flexDir="column" mt={10}>
