@@ -7,33 +7,32 @@ import { BsFolderFill } from "react-icons/bs";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { LuTrash2 } from "react-icons/lu";
 
-const LS_KEYS = { FOLDERS: "app.folders" } as const;
+const LOCAL_STORAGE_KEYS = { FOLDERS: "app.folders" } as const;
 
 type Folder = { id: string; name: string; color?: string };
 
-const DEFAULT_COLOR = "green";
+const DEFAULT_COLOR = "white";
 
 const PALETTE: string[] = [
-    "darkred",
-    "hotpink",
-    "blueviolet",
-    "yellow",
-    "coral",
-    "orange",
-    "lightgreen",
-    "lime",
-    "green",
-    "cyan",
-    "blue",
-    "darkblue",
+    "white",
+    'red',
+    'hotpink',
+    'coral',
+    'orange',
+    'yellow',
+    'lightgreen',
+    'lime',
+    'green',
+    'cyan',
+    'blue',
+    'blueviolet',
 ];
 
-const genId = () =>
-    `fld_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-
+const generateId = () => String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    
 const loadFolders = (): Folder[] => {
     try {
-        const raw = localStorage.getItem(LS_KEYS.FOLDERS);
+        const raw = localStorage.getItem(LOCAL_STORAGE_KEYS.FOLDERS);
         if (!raw) return [];
         const parsed: Folder[] = JSON.parse(raw);
         return parsed.map((f) => ({ ...f, color: f.color ?? DEFAULT_COLOR }));
@@ -44,7 +43,7 @@ const loadFolders = (): Folder[] => {
 
 const saveFolders = (next: Folder[]) => {
     try {
-        localStorage.setItem(LS_KEYS.FOLDERS, JSON.stringify(next));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.FOLDERS, JSON.stringify(next));
     } catch { }
 };
 
@@ -77,19 +76,19 @@ const FolderList = () => {
     }, [persist]);
 
     const deleteFolder = useCallback((index: number) => {
-    if (!window.confirm("このフォルダを削除しますか？")) return;
-    persist((prev) => {
-        const next = [...prev];
-        next.splice(index, 1);
-        return next;
-    });
-}, [persist]);
+        if (!window.confirm("このフォルダを削除しますか？")) return;
+        persist((prev) => {
+            const next = [...prev];
+            next.splice(index, 1);
+            return next;
+        });
+    }, [persist]);
 
     const onCreate = useCallback((e: Event) => {
         const evt = e as CustomEvent<{ name: string }>;
         const name = evt.detail?.name?.trim();
         if (!name) return;
-        persist((prev) => [...prev, { id: genId(), name, color: DEFAULT_COLOR }]);
+        persist((prev) => [...prev, { id: generateId(), name, color: DEFAULT_COLOR }]);
     }, [persist]);
 
     useEffect(() => {
@@ -172,19 +171,19 @@ const FolderList = () => {
                                 {folder.name}
                             </Text>
                             <Box ml='auto'>
-                                <FaRegPenToSquare 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    changeName(idx);
-                                }}/>
+                                <FaRegPenToSquare
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        changeName(idx);
+                                    }} />
                             </Box>
                             <Box>
                                 <LuTrash2
-                                color='red'
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteFolder(idx);
-                                }} />
+                                    color='red'
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteFolder(idx);
+                                    }} />
                             </Box>
                         </Flex>
                     </Card.Root>
