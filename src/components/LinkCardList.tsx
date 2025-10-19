@@ -104,7 +104,9 @@ const LinkCardList = ({ urls, folderId }: Props) => {
         }
         try {
             localStorage.setItem(storageKey, JSON.stringify(items));
-        } catch { }
+        } catch {
+            console.error('ローカルストレージへの保存に失敗しました。');
+        }
     }, [items, mounted, storageKey]);
 
     if (!mounted || items.length === 0) return null;
